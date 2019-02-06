@@ -1,38 +1,40 @@
 package unizar.labis.zero_one_to_one;
 
-// Es mutable. Podemos reasignarle ministerio si queremos
-public class Persona {
+import unizar.labis.Entity;
+import java.util.Optional;
+
+public class Persona implements Entity {
     private String nombre;
-    private Ministerio ministerio;
+    // El uso de Optional es un poco forzado, pero ilustra el interés de este tipo
+	// de contenedores: se ve muy fácilmente que ministerio puede no tener un valor
+    private Optional<Ministerio> ministerio;
 
     public Persona(String nombre) {
         this.nombre = nombre;
-        this.ministerio = null;
+        this.ministerio = Optional.empty();
         validaInvariante();
     }
 
-    public void hacerMinistroDe(Ministerio ministerio) {
-        // No se puede asignar un ministerio a una persona si antes
-        // no hemos asignado la persona al ministerio
-        assert(ministerio.tieneComoMinistroA(this));
-        this.ministerio = ministerio;
+    public boolean esMinistroDe(Ministerio m) {
+    	if (ministerio.isPresent())
+        	return ministerio.get() == m;
+    	return false;
+    }
+
+    public void setMinisterio(Optional<Ministerio> m) {
+        ministerio = m;
         validaInvariante();
     }
 
-    public void destituir() {
-        // No se puede quitar un ministerio a una persona si antes
-        // no hemos asignado otra persona a ese ministerio (ni si no
-        // tenía un ministerio)
-        assert(this.ministerio != null &&
-                !this.ministerio.tieneComoMinistroA(this));
-        this.ministerio = null;
+    public void destituir(Persona sustituto) {
+    	assert sustituto != null: "No puedes destituir a un ministro sin poner un sustito.";
+    	assert ministerio.isPresent(): "No puedes destituir a alguien que no es ministro";
+        ministerio.get().setMinistro(sustituto);
+        ministerio = Optional.empty();
         validaInvariante();
     }
 
-    public boolean esMinistroDe(Ministerio ministerio) {
-        if (ministerio != null) return this.ministerio == ministerio;
-        return false;
-    }
+    public Optional<Ministerio> getMinisterio() {return ministerio; };
 
     public String getNombre() {
         return nombre;
@@ -41,8 +43,9 @@ public class Persona {
     // Se comprueba al final de cada método que cambia el estado de la clase
     private void validaInvariante() {
         // O bien esta persona no es ministra, o bien es ministra de nuestro ministerio
-        assert(this.ministerio == null ||
-                this.ministerio.tieneComoMinistroA(this));
+        assert(!ministerio.isPresent() ||
+               ministerio.get().tieneComoMinistroA(this));
+        assert nombre != null;
     }
 
 }
