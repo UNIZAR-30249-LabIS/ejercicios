@@ -46,6 +46,10 @@ public class Persona implements Entity {
 		else throw new IllegalStateException("Persona no totalmenteConstruido");
 	}
 
+	// Este método nos permite saber si el objeto se ha terminado de construir o no
+	// Se usa porque dado que la asociación Persona-Minsterio es 1 a 1 siempre habrá
+	// algún momento en que no se validará el invariante porque alguno de los dos
+	// lados está a medio construir
 	public boolean totalmenteConstruido() {
 		return nombre != null && ministerio != null;
 	}
