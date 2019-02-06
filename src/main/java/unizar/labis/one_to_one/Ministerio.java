@@ -1,29 +1,78 @@
 package unizar.labis.one_to_one;
 
-// Es inmutable
-public final class Ministerio {
-    private final String nombreMinisterio;
-    private final RegistroMinisterios registro;
+import unizar.labis.Entity;
 
-    /**
-     * No usar este constructor. Construir siempre desde RegistroMinisterios.
-     */
-    Ministerio(RegistroMinisterios registro, String nombreMinisterio) {
-        // El constructor es "package-private". Eso dificulta que se use "sin querer"
-        // pero no lo impide (podemos hacerlo en una clase en el mismo paquete)
-        this.registro = registro;
-        this.nombreMinisterio = nombreMinisterio;
-        // El ministerio aquí no es correcto, y no lo será hasta que se le asigne
-        // un ministro en el RegistroMinisterios.
-    }
+public class Ministerio implements Entity {
+	private String nombreMinisterio = null;
+	private Persona ministro = null;
 
-    public String getNombreMinisterio() {
-        return nombreMinisterio;
-    }
+	public Ministerio() {
+		validaInvariante();
+	}
 
-    public Persona getMinistro() {
-        Persona p = registro.getMinistroDeMinisterio(nombreMinisterio);
-        assert p != null : "Este ministerio no tiene ministro. Fue creado incorrectamente.";
-        return p;
-    }
+	public Ministerio(Persona ministro, String nombreMinisterio) {
+		this.nombreMinisterio = nombreMinisterio;
+		this.ministro = ministro;
+		validaInvariante();
+	}
+
+	public void setNombreMinisterio(String nombreMinisterio) {
+		this.nombreMinisterio = nombreMinisterio;
+		validaInvariante();
+	}
+
+	public void setMinistro(Persona persona) {
+		assert persona != null : "Un ministerio debe tener ministro.";
+
+		// ¿Qué pasa con nuestro antiguo ministro, que sí o sí tiene
+		// que estar asociado a un Ministerio, pero ya no a este?
+		// Este es un problema que no tiene una solución única o
+		// trivial e ilustra la problemática de las multiplicidades
+		// que no pueden ser 0
+
+		if (ministro != null) {
+			// Una solución puede ser crear un Ministerio Dummy para
+			// nuestro actual ministro
+			Ministerio dummy = new Ministerio();
+			ministro.setMinisterio(dummy);
+			dummy.setNombreMinisterio("Dummy");
+			dummy.setMinistro(ministro);
+		}
+
+		// Y luego ya lo podemos sustituir
+		ministro = persona;
+		ministro.setMinisterio(this);
+		validaInvariante();
+	}
+
+	public String getNombreMinisterio() {
+		if (nombreMinisterio != null)
+			return nombreMinisterio;
+		 else
+			throw new IllegalStateException("Ministerio no totalmenteConstruido");
+	}
+
+	public Persona getMinistro() {
+		if (ministro != null)
+			return ministro;
+		else
+			throw new IllegalStateException("Ministerio no totalmenteConstruido");
+	}
+
+	public boolean tieneComoMinistroA(Persona persona) {
+		if (ministro != null)
+			return ministro == persona;
+		else
+			throw new IllegalStateException("Ministerio no totalmenteConstruido");
+	}
+
+	public boolean totalmenteConstruido() {
+		return nombreMinisterio != null && ministro != null;
+	}
+
+	private void validaInvariante() {
+		if (this.totalmenteConstruido() && ministro.totalmenteConstruido()) {
+			assert ministro.esMinistroDe(this);
+		}
+	}
 }

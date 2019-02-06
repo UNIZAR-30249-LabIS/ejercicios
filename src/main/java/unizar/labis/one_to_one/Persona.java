@@ -1,35 +1,59 @@
 package unizar.labis.one_to_one;
 
-// Es inmutable
-public final class Persona {
-    private final String nombre;
-    private final RegistroMinisterios registro;
+import unizar.labis.Entity;
 
-    /**
-     * No usar este constructor. Construir siempre desde RegistroMinisterios.
-     */
-    Persona(RegistroMinisterios registro, String nombre) {
-        // El constructor es "package-private". Eso dificulta que se use "sin querer"
-        // pero no lo impide (podemos crear una clase para ello en el mismo paquete)
-        this.registro = registro;
-        this.nombre = nombre;
-        // Esta persona aquí no es correcta; todavía no es ministro y no lo será
-        // hasta que se le asigne ministerio en RegistroMinisterios
-    }
+public class Persona implements Entity {
+	private String nombre;
+	private Ministerio ministerio;
 
-    public Ministerio getMinisterio() {
-        Ministerio m = registro.getMinisterioDePersona(nombre);
-        assert m != null : "Esta persona no es ministro. Fue creada incorrectamente.";
-        return m;
-    }
+	public Persona() {
+		validaInvariante();
+	}
 
-    public boolean esMinistroDe(Ministerio ministerio) {
-        // Asumo que cada ministerio tiene un nombre único (EN GENERAL PODRÍA SER MUCHO ASUMIR)
-        return getMinisterio().getNombreMinisterio() == ministerio.getNombreMinisterio();
-    }
+	public Persona(String nombre, Ministerio ministerio) {
+		this.nombre = nombre;
+		this.ministerio = ministerio;
+		validaInvariante();
+	}
 
-    public String getNombre() {
-        return nombre;
-    }
+	public void setNombre(String nombre) {
+		assert nombre != null:"Una Persona debe tener nombre";
+		this.nombre = nombre;
+		validaInvariante();
+	}
+
+	public void setMinisterio(Ministerio ministerio) {
+		assert ministerio != null:"Una Persona debe tener ministerio";
+		this.ministerio = ministerio;
+		validaInvariante();
+	}
+
+	public Ministerio getMinisterio() {
+		if (ministerio != null)
+			return ministerio;
+		else throw new IllegalStateException("Persona no totalmenteConstruido");
+	}
+
+	public boolean esMinistroDe(Ministerio m) {
+		if (ministerio != null)
+			return ministerio == m;
+		else throw new IllegalStateException("Persona no totalmenteConstruido");
+	}
+
+	public String getNombre() {
+		if (nombre != null)
+			return nombre;
+		else throw new IllegalStateException("Persona no totalmenteConstruido");
+	}
+
+	public boolean totalmenteConstruido() {
+		return nombre != null && ministerio != null;
+	}
+
+	private void validaInvariante() {
+		if (this.totalmenteConstruido() && ministerio.totalmenteConstruido()) {
+			assert ministerio.tieneComoMinistroA(this);
+		}
+	}
 }
 
