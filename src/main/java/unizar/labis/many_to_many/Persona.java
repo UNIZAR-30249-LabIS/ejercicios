@@ -40,8 +40,7 @@ public class Persona implements Entity {
 		// llama no modifique el conjunto de ministerios destrozando la coherencia de la relación M a N
 		// A partir de Java 9 una alternativa a las copias defensivas son las colecciones inmutables,
 		// que se pueden compartir con libertad
-		HashSet<Ministerio> copiaMinisterios = new HashSet<Ministerio>(ministerios);
-		return copiaMinisterios;
+		return new HashSet<Ministerio>(ministerios);
 	};
 
 	public String getNombre() { return nombre; }
