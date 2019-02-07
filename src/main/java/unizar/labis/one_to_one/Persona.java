@@ -6,7 +6,8 @@ public class Persona implements Entity {
 	private String nombre;
 	private Ministerio ministerio;
 
-	public Persona() {
+	public Persona(String nombre) {
+		this.nombre = nombre;
 		validaInvariante();
 	}
 

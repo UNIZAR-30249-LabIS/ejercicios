@@ -6,7 +6,8 @@ public class Ministerio implements Entity {
 	private String nombreMinisterio = null;
 	private Persona ministro = null;
 
-	public Ministerio() {
+	public Ministerio(String nombreMinisterio) {
+		this.nombreMinisterio = nombreMinisterio;
 		validaInvariante();
 	}
 
@@ -33,9 +34,8 @@ public class Ministerio implements Entity {
 		if (ministro != null) {
 			// Una solución puede ser crear un Ministerio Dummy para
 			// nuestro actual ministro
-			Ministerio dummy = new Ministerio();
+			Ministerio dummy = new Ministerio("Dummy");
 			ministro.setMinisterio(dummy);
-			dummy.setNombreMinisterio("Dummy");
 			dummy.setMinistro(ministro);
 		}
 

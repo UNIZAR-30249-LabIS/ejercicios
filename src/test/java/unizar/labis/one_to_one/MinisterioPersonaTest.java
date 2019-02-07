@@ -13,11 +13,9 @@ class MinisterioPersonaTest {
 		// y es fácil no acordarse. Esto sería una buenísima razón para implementar
 		// una Factory que instanciara apropiadamente parejas de objetos Persona-Ministerio
 		// ocultando esta complejidad.
-		p = new Persona();
-		m = new Ministerio();
-		p.setNombre("Montoro");
+		p = new Persona("Montoro");
+		m = new Ministerio("Hacienda");
 		p.setMinisterio(m);
-		m.setNombreMinisterio("Hacienda");
 		m.setMinistro(p);
 	}
 
@@ -28,9 +26,8 @@ class MinisterioPersonaTest {
 
 	@Test
 	void cambiaMinistro() {
-		Persona s = new Persona();
+		Persona s = new Persona("Soraya");
 		m.setMinistro(s);
-		s.setNombre("Soraya");
 		s.setMinisterio(m);
 
 		assert(m.tieneComoMinistroA(s));
@@ -41,17 +38,13 @@ class MinisterioPersonaTest {
 
 	@Test
 	void swapMinisterios() {
-		Ministerio hacienda = new Ministerio();
-		Ministerio interior = new Ministerio();
-		Persona zoido = new Persona();
-		Persona montoro = new Persona();
-		hacienda.setNombreMinisterio("Hacienda");
+		Ministerio hacienda = new Ministerio("Hacienda");
+		Ministerio interior = new Ministerio("Interior");
+		Persona zoido = new Persona("Zoido");
+		Persona montoro = new Persona("Montoro");
 		hacienda.setMinistro(montoro);
-		interior.setNombreMinisterio("Interior");
 		interior.setMinistro(zoido);
-		zoido.setNombre("Zoido");
 		zoido.setMinisterio(interior);
-		montoro.setNombre("Montoro");
 		montoro.setMinisterio(hacienda);
 
 		// Hacemos el swap
