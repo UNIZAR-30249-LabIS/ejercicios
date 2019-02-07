@@ -23,25 +23,27 @@ public class Ministerio implements Entity {
 	}
 
 	public void setMinistro(Persona persona) {
-		assert persona != null : "Un ministerio debe tener ministro.";
-
 		// ¿Qué pasa con nuestro antiguo ministro, que sí o sí tiene
 		// que estar asociado a un Ministerio, pero ya no a este?
 		// Este es un problema que no tiene una solución única o
 		// trivial e ilustra la problemática de las multiplicidades
 		// que no pueden ser 0
 
-		if (ministro != null) {
-			// Una solución puede ser crear un Ministerio Dummy para
-			// nuestro actual ministro
-			Ministerio dummy = new Ministerio("Dummy");
-			ministro.setMinisterio(dummy);
-			dummy.setMinistro(ministro);
+		// Vamos a resolverlo haciéndolo null, con lo que el método
+		// totalmenteConstruido de ese ministro dará false avisando de
+		// que no se puede usar tal cual está
+		if (persona == null)
+			this.ministro = null; // Si solo nos nulifican, no hacemos nada más
+		else {
+			if (totalmenteConstruido()) {
+				ministro.setMinisterio(null);
+			}
+			// Y luego ya lo podemos sustituir
+			ministro = persona;
+			if (!ministro.totalmenteConstruido() ||
+					ministro.totalmenteConstruido() && ministro.getMinisterio() != this)
+				ministro.setMinisterio(this);
 		}
-
-		// Y luego ya lo podemos sustituir
-		ministro = persona;
-		ministro.setMinisterio(this);
 		validaInvariante();
 	}
 

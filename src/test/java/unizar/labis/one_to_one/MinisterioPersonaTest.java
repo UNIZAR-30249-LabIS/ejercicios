@@ -3,37 +3,54 @@ package unizar.labis.one_to_one;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 class MinisterioPersonaTest {
 	Ministerio m;
 	Persona p;
 
 	@BeforeEach
 	void setUp() {
-		// La construcción es pesada porque hay que hacer las cosas en orden
-		// y es fácil no acordarse. Esto sería una buenísima razón para implementar
-		// una Factory que instanciara apropiadamente parejas de objetos Persona-Ministerio
-		// ocultando esta complejidad.
 		p = new Persona("Montoro");
 		m = new Ministerio("Hacienda");
-		p.setMinisterio(m);
-		m.setMinistro(p);
 	}
 
 	@Test
-	void tieneComoMinistroA() {
-		assert(m.tieneComoMinistroA(p));
+	void asignaMinistroMinisterio() {
+		p.setMinisterio(m);
+		assert m.tieneComoMinistroA(p) ;
+		assert p.esMinistroDe(m) ;
+	}
+
+	@Test
+	void asignaMinisterioMinistro() {
+		m.setMinistro(p);
+		assert m.tieneComoMinistroA(p) ;
+		assert p.esMinistroDe(m) ;
 	}
 
 	@Test
 	void cambiaMinistro() {
+		p.setMinisterio(m);
 		Persona s = new Persona("Soraya");
 		m.setMinistro(s);
-		s.setMinisterio(m);
 
-		assert(m.tieneComoMinistroA(s));
-		assert(!m.tieneComoMinistroA(p));
-		assert(s.esMinistroDe(m));
-		assert(!p.esMinistroDe(m));
+		assert m.tieneComoMinistroA(s) ;
+		assert !m.tieneComoMinistroA(p) ;
+		assert s.esMinistroDe(m) ;
+		// En este punto p (Montoro) no está totalmente construido, porque
+		// le hemos dado su Ministerio a Soraya y por tanto el no tiene
+		// Ministerio.
+		assert !p.totalmenteConstruido();
+		// Debe fallar si tratamos de averiguar su ministerio.
+		assertThrows(IllegalStateException.class,
+				()->{
+					boolean a = p.esMinistroDe(m);
+				});
+		Ministerio m1 = new Ministerio("ParaIrTirando");
+		p.setMinisterio(m1);
+		assert p.esMinistroDe(m1) ;
+		assert m1.tieneComoMinistroA(p) ;
 	}
 
 	@Test
@@ -44,14 +61,10 @@ class MinisterioPersonaTest {
 		Persona montoro = new Persona("Montoro");
 		hacienda.setMinistro(montoro);
 		interior.setMinistro(zoido);
-		zoido.setMinisterio(interior);
-		montoro.setMinisterio(hacienda);
 
 		// Hacemos el swap
 		hacienda.setMinistro(zoido);
 		interior.setMinistro(montoro);
-		zoido.setMinisterio(hacienda);
-		montoro.setMinisterio(interior);
 		assert hacienda.getMinistro() == zoido;
 		assert interior.getMinistro() == montoro;
 		assert zoido.getMinisterio() == hacienda;

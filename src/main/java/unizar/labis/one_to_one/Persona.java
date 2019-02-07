@@ -23,9 +23,22 @@ public class Persona implements Entity {
 		validaInvariante();
 	}
 
-	public void setMinisterio(Ministerio ministerio) {
-		assert ministerio != null:"Una Persona debe tener ministerio";
-		this.ministerio = ministerio;
+	public void setMinisterio(Ministerio m) {
+		if (m == null) {
+			this.ministerio = null; // Si solo nos nulifican no hacemos nada más
+		} else {
+			// Al antiguo ministerio le damos un ministro null para que this no
+			// sea ministro de ambos
+			if (totalmenteConstruido()) {
+				ministerio.setMinistro(null);
+			}
+
+			// Luego ya lo cambiamos por el nuevo
+			this.ministerio = m;
+			if (!ministerio.totalmenteConstruido() ||
+					ministerio.totalmenteConstruido() && ministerio.getMinistro() != this)
+				ministerio.setMinistro(this);
+		}
 		validaInvariante();
 	}
 
@@ -36,7 +49,7 @@ public class Persona implements Entity {
 	}
 
 	public boolean esMinistroDe(Ministerio m) {
-		if (ministerio != null)
+		if (totalmenteConstruido() && ministerio != null)
 			return ministerio == m;
 		else throw new IllegalStateException("Persona no totalmenteConstruido");
 	}
