@@ -41,7 +41,7 @@ public class Ministerio extends AbstractEntity {
 			// Y luego ya lo podemos sustituir
 			ministro = persona;
 			if (!ministro.totalmenteConstruido() ||
-					ministro.totalmenteConstruido() && ministro.getMinisterio() != this)
+					ministro.totalmenteConstruido() && !ministro.getMinisterio().equals(this))
 				ministro.setMinisterio(this);
 		}
 		validaInvariante();
@@ -63,7 +63,7 @@ public class Ministerio extends AbstractEntity {
 
 	public boolean tieneComoMinistroA(Persona persona) {
 		if (ministro != null)
-			return ministro == persona;
+			return ministro.equals(persona);
 		else
 			throw new IllegalStateException("Ministerio no totalmenteConstruido");
 	}

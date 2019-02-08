@@ -15,7 +15,7 @@ public class Ministerio extends AbstractEntity {
 	}
 
 	public boolean tieneComoMinistroA(Persona persona) {
-		return this.ministro == persona;
+		return this.ministro.equals(persona);
 	}
 
 	public void setMinistro(Persona persona) {

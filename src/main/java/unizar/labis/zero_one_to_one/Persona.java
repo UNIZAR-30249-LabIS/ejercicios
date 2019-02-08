@@ -17,7 +17,7 @@ public class Persona extends AbstractEntity {
 
     public boolean esMinistroDe(Ministerio m) {
     	if (ministerio.isPresent())
-        	return ministerio.get() == m;
+        	return ministerio.get().equals(m);
     	return false;
     }
 

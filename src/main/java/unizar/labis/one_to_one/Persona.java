@@ -36,7 +36,7 @@ public class Persona extends AbstractEntity {
 			// Luego ya lo cambiamos por el nuevo
 			this.ministerio = m;
 			if (!ministerio.totalmenteConstruido() ||
-					ministerio.totalmenteConstruido() && ministerio.getMinistro() != this)
+					ministerio.totalmenteConstruido() && !ministerio.getMinistro().equals(this))
 				ministerio.setMinistro(this);
 		}
 		validaInvariante();
@@ -50,7 +50,7 @@ public class Persona extends AbstractEntity {
 
 	public boolean esMinistroDe(Ministerio m) {
 		if (totalmenteConstruido() && ministerio != null)
-			return ministerio == m;
+			return ministerio.equals(m);
 		else throw new IllegalStateException("Persona no totalmenteConstruido");
 	}
 
