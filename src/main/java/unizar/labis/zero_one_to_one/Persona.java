@@ -1,9 +1,9 @@
 package unizar.labis.zero_one_to_one;
 
-import unizar.labis.Entity;
+import unizar.labis.AbstractEntity;
 import java.util.Optional;
 
-public class Persona implements Entity {
+public class Persona extends AbstractEntity {
     private String nombre;
     // El uso de Optional es un poco forzado, pero ilustra el interés de este tipo
 	// de contenedores: se ve muy fácilmente que ministerio puede no tener un valor

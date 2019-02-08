@@ -1,9 +1,9 @@
 package unizar.labis.zero_one_to_one;
 
-import unizar.labis.Entity;
+import unizar.labis.AbstractEntity;
 import java.util.Optional;
 
-public class Ministerio implements Entity {
+public class Ministerio extends AbstractEntity {
 	private String nombreMinisterio;
 	private Persona ministro;
 

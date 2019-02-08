@@ -1,12 +1,12 @@
 package unizar.labis.many_to_many;
 
-import unizar.labis.Entity;
+import unizar.labis.AbstractEntity;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.HashSet;
 
-public class Persona implements Entity {
+public class Persona extends AbstractEntity {
 	private String nombre;
 	private Set<Ministerio> ministerios = new HashSet<Ministerio>();
 
